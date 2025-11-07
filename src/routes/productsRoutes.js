@@ -2,26 +2,15 @@ import { Router } from 'express';
 import {
   getAllProducts,
   getProductById,
+  createProduct,
+  deleteProduct,
+  updateProduct,
 } from '../controllers/productsController.js';
 const router = Router();
 router.get('/products', getAllProducts);
 router.get('/products/productId', getProductById);
+router.post('/products', createProduct);
+router.patch('/products/productId', updateProduct);
+router.delete('/products/productId', deleteProduct);
 
-// import {
-//   getAllNotes,
-//   getNoteById,
-//   createNote,
-//   deleteNote,
-//   updateNote,
-// } from '../controllers/notesController.js';
-
-// const router = Router();
-
-// router.get('/notes', getAllNotes);
-
-// router.get('/notes/:noteId', getNoteById);
-
-// router.post('/notes', createNote);
-// router.delete('/notes/:noteId', deleteNote);
-// router.patch('/notes/:noteId', updateNote);
 export default router;
