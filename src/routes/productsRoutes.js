@@ -6,11 +6,26 @@ import {
   deleteProduct,
   updateProduct,
 } from '../controllers/productsController.js';
+
+import {
+  productIdSchema,
+  createProductSchema,
+  updateProductSchema,
+} from '../validations/productsValidation.js';
+
+import { celebrate } from 'celebrate';
+import { authenticate } from '../middleware/authenticate.js';
+
 const router = Router();
+router.use('/products', authenticate);
 router.get('/products', getAllProducts);
-router.get('/products/productId', getProductById);
-router.post('/products', createProduct);
-router.patch('/products/productId', updateProduct);
-router.delete('/products/productId', deleteProduct);
+router.get('/products/productId', celebrate(productIdSchema), getProductById);
+router.post('/products', celebrate(createProductSchema), createProduct);
+router.patch(
+  '/products/productId',
+  celebrate(updateProductSchema),
+  updateProduct,
+);
+router.delete('/products/productId', celebrate(productIdSchema), deleteProduct);
 
 export default router;
