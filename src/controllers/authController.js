@@ -72,6 +72,6 @@ export const refreshUserSession = async (req, res, next) => {
   setSessionCookies(res, newSession);
 
   res.status(200).json({
-    message: 'Session refreshed',
+    message: 'Successfully refreshed a session',
   });
 };
