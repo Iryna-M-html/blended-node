@@ -1,5 +1,6 @@
-import mongoose from 'mongoose';
-const productSchema = new mongoose.Schema(
+import { Schema } from 'mongoose';
+import { model } from 'mongoose';
+const productSchema = new Schema(
   {
     name: { type: String, required: true },
     price: { type: Number, required: true },
@@ -10,11 +11,22 @@ const productSchema = new mongoose.Schema(
       default: 'Other',
     },
     description: { type: String },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
   },
   {
     timestamps: true,
   },
 );
-
-export const Product = mongoose.model('Product', productSchema);
+productSchema.index(
+  {
+    name: 'text',
+    description: 'text',
+  },
+  { name: 'ProductTextIndex' },
+);
+export const Product = model('Product', productSchema);
 // если не указано required: true поле автоматически становится optional.
