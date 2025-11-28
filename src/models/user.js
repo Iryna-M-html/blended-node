@@ -17,6 +17,13 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    phone: {
+      type: String,
+      required: [true, 'Phone number is required'],
+      unique: true,
+      trim: true,
+      match: [/^\+380\d{9}$/, 'Phone must be in format +380XXXXXXXXX'],
+    },
   },
   { timestamps: true, versionKey: false },
 );
@@ -29,10 +36,9 @@ userSchema.pre('save', function (next) {
 });
 
 userSchema.methods.toJSON = function () {
-  // Берёт документ и превращает его в обычный объект (this.toObject()).
   const obj = this.toObject();
-  //Удаляет поле password, чтобы оно никогда не утекло на клиент.
+
   delete obj.password;
-  return obj; //Возвращает «очищенный» объект.
+  return obj;
 };
 export const User = model('User', userSchema);

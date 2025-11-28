@@ -14,9 +14,18 @@ export const createOrder = async (req, res, next) => {
 
   const newOrder = await Order.create({
     ...req.body,
+    // userId: req.user._id, // привязываем к авторизованному пользователю
     userId: existingUser ? existingUser._id : null,
     date,
   });
 
   res.status(201).json(newOrder);
+};
+
+export const getUserOrders = async (req, res, next) => {
+  const orders = await Order.find({ userId: req.user._id });
+  if (orders.length === 0) {
+    return next(createHttpError(404, 'Order not found'));
+  }
+  res.status(200).json(orders);
 };

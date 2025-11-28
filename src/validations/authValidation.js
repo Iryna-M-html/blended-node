@@ -5,6 +5,10 @@ export const registerUserSchema = {
     name: Joi.string().required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(8).required(),
+    phone: Joi.string()
+      .pattern(/^\+380\d{9}$/)
+      .max(13)
+      .required(),
   }),
 };
 export const loginUserSchema = {
