@@ -16,6 +16,8 @@ const productSchema = new Schema(
       ref: 'User',
       required: true,
     },
+    averageRate: { type: Number, default: 0 },
+    feedbackCount: { type: Number, default: 0 },
   },
   {
     timestamps: true,
@@ -28,5 +30,9 @@ productSchema.index(
   },
   { name: 'ProductTextIndex' },
 );
+productSchema.index({
+  feedbackCount: -1,
+  averageRate: -1,
+  name: 1,
+});
 export const Product = model('Product', productSchema);
-// если не указано required: true поле автоматически становится optional.

@@ -9,6 +9,7 @@ import { logger } from './middleware/logger.js';
 import productsRoutes from './routes/productsRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import cookieParser from 'cookie-parser';
+import orderRoutes from './routes/orderRoutes.js';
 const app = express();
 const PORT = process.env.PORT ?? 3030;
 
@@ -22,7 +23,7 @@ app.get('/', (req, res) => {
 });
 app.use(authRoutes);
 app.use(productsRoutes);
-
+app.use(orderRoutes);
 app.use(notFoundHandler);
 app.use(errorHandler);
 await connectMongoDB();
