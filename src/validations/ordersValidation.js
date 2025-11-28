@@ -24,3 +24,10 @@ export const createOrderSchema = {
       .optional(),
   }),
 };
+export const updateStatusSchema = {
+  [Segments.BODY]: Joi.object({
+    status: Joi.string()
+      .valid(...ORDER_STATUS)
+      .required(),
+  }),
+};
