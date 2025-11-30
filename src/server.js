@@ -10,6 +10,7 @@ import productsRoutes from './routes/productsRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import cookieParser from 'cookie-parser';
 import orderRoutes from './routes/orderRoutes.js';
+import { processTelegramUpdate } from './services/telegram.js';
 const app = express();
 const PORT = process.env.PORT ?? 3030;
 
@@ -24,6 +25,15 @@ app.get('/', (req, res) => {
 app.use(authRoutes);
 app.use(productsRoutes);
 app.use(orderRoutes);
+
+app.post(
+  `/api/telegram/webhook/${process.env.TELEGRAM_BOT_TOKEN}`,
+  (req, res) => {
+    processTelegramUpdate(req.body);
+    res.sendStatus(200);
+  },
+);
+
 app.use(notFoundHandler);
 app.use(errorHandler);
 await connectMongoDB();
