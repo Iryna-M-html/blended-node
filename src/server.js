@@ -10,10 +10,12 @@ import productsRoutes from './routes/productsRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import cookieParser from 'cookie-parser';
 import orderRoutes from './routes/orderRoutes.js';
-import {
-  processTelegramUpdate,
-  setupTelegramWebhook,
-} from './services/telegram.js';
+import subscriptionRoutes from './routes/subscriptionRoutes.js';
+// import telegramRoutes from './routes/telegramRoutes.js';
+// import {
+//   processTelegramUpdate,
+//   setupTelegramWebhook,
+// } from './services/telegram.js';
 const app = express();
 const PORT = process.env.PORT ?? 3030;
 
@@ -28,29 +30,23 @@ app.get('/', (req, res) => {
 app.use(authRoutes);
 app.use(productsRoutes);
 app.use(orderRoutes);
-
-app.post(
-  `/api/telegram/webhook/${process.env.TELEGRAM_BOT_TOKEN}`,
-  (req, res) => {
-    processTelegramUpdate(req.body);
-    res.sendStatus(200);
-  },
-);
+app.use(subscriptionRoutes);
+// app.use(telegramRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
-// await connectMongoDB();
-// app.listen(PORT, () => {
-//   console.log(`Server is running on port ${PORT}`);
-// });
-const startServer = async () => {
-  await connectMongoDB();
+await connectMongoDB();
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+// const startServer = async () => {
+//   await connectMongoDB();
 
-  if (process.env.NODE_ENV === 'production') {
-    await setupTelegramWebhook();
-  }
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
-};
-startServer();
+//   if (process.env.NODE_ENV === 'production') {
+//     await setupTelegramWebhook();
+//   }
+//   app.listen(PORT, () => {
+//     console.log(`Server is running on port ${PORT}`);
+//   });
+// };
+// startServer();
