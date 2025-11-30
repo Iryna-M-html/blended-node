@@ -20,7 +20,7 @@ router.use('/orders', authenticate);
 router.post('/orders', celebrate(createOrderSchema), ctrlWrapper(createOrder));
 router.get('/orders', authenticate, ctrlWrapper(getUserOrders));
 router.patch(
-  '/orders/:id/status',
+  '/orders/productId/status',
   authenticate,
   requireAdmin,
   celebrate(updateStatusSchema),

@@ -10,7 +10,10 @@ import productsRoutes from './routes/productsRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import cookieParser from 'cookie-parser';
 import orderRoutes from './routes/orderRoutes.js';
-import { processTelegramUpdate } from './services/telegram.js';
+import {
+  processTelegramUpdate,
+  setupTelegramWebhook,
+} from './services/telegram.js';
 const app = express();
 const PORT = process.env.PORT ?? 3030;
 
@@ -36,7 +39,18 @@ app.post(
 
 app.use(notFoundHandler);
 app.use(errorHandler);
-await connectMongoDB();
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+// await connectMongoDB();
+// app.listen(PORT, () => {
+//   console.log(`Server is running on port ${PORT}`);
+// });
+const startServer = async () => {
+  await connectMongoDB();
+
+  if (process.env.NODE_ENV === 'production') {
+    await setupTelegramWebhook();
+  }
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+};
+startServer();
