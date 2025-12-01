@@ -12,6 +12,7 @@ import cookieParser from 'cookie-parser';
 import orderRoutes from './routes/orderRoutes.js';
 import subscriptionRoutes from './routes/subscriptionRoutes.js';
 import feedbackRoutes from './routes/feedbackRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js';
 // import telegramRoutes from './routes/telegramRoutes.js';
 // import {
 //   processTelegramUpdate,
@@ -33,6 +34,7 @@ app.use(productsRoutes);
 app.use(orderRoutes);
 app.use(subscriptionRoutes);
 app.use(feedbackRoutes);
+app.use(categoryRoutes);
 // app.use(telegramRoutes);
 
 app.use(notFoundHandler);
