@@ -16,3 +16,12 @@ export const createFeedbackSchema = {
       .required(),
   }),
 };
+export const getAllFeedbacksSchema = {
+  [Segments.QUERY]: Joi.object({
+    page: Joi.number().integer().min(1).default(1),
+    perPage: Joi.number().integer().min(3).max(12).default(3),
+    product: Joi.string().custom(objectIdValidator).trim(),
+    category: Joi.string().custom(objectIdValidator).trim(),
+    rate: Joi.number().integer().min(1).max(5),
+  }),
+};
