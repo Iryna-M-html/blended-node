@@ -5,11 +5,13 @@ import {
   categoryIdParamSchema,
   createCategorySchema,
   getCategoriesSchema,
+  updateCategorySchema,
 } from '../validations/categoriesValidation.js';
 import {
   createCategory,
   getAllCategories,
   getCategoryById,
+  updateCategory,
 } from '../controllers/categoryController.js';
 
 const router = Router();
@@ -29,5 +31,9 @@ router.post(
   celebrate(createCategorySchema),
   ctrlWrapper(createCategory),
 );
-
+router.patch(
+  '/categories/:id',
+  celebrate(updateCategorySchema),
+  ctrlWrapper(updateCategory),
+);
 export default router;

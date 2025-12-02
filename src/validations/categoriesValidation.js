@@ -26,3 +26,12 @@ export const createCategorySchema = {
     img_id: Joi.string().trim().allow('', null),
   }),
 };
+export const updateCategorySchema = {
+  ...categoryIdParamSchema,
+  [Segments.BODY]: Joi.object({
+    name: Joi.string().trim().required(),
+    description: Joi.string().trim().allow('', null),
+    img: Joi.string().uri().allow('', null),
+    img_id: Joi.string().trim().allow('', null),
+  }).min(1),
+};

@@ -66,3 +66,38 @@ export const createCategory = async (req, res) => {
     category,
   });
 };
+
+export const updateCategory = async (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+
+  if (!name) {
+    throw createHttpError(
+      400,
+      'At least one field must be selected for updating',
+    );
+  }
+
+  if (name) {
+    const existingCategory = await Category.findOne({ name, _id: { $ne: id } });
+    if (existingCategory) {
+      throw createHttpError(409, 'A category with this name already exists');
+    }
+  }
+
+  const category = await Category.findByIdAndUpdate(
+    id,
+    { name },
+    { new: true, runValidators: true },
+  );
+
+  if (!category) {
+    throw createHttpError(404, 'Category not found');
+  }
+
+  res.status(200).json({
+    success: true,
+    message: 'Category updated successfully',
+    category,
+  });
+};

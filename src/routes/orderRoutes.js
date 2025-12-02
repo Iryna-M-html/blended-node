@@ -13,7 +13,7 @@ import {
   updateOrderStatus,
 } from '../controllers/orderController.js';
 import { authenticate } from '../middleware/authenticate.js';
-import { requireAdmin } from '../middleware/requireAdmin.js';
+// import { requireAdmin } from '../middleware/requireAdmin.js';
 
 const router = Router();
 router.use('/orders', authenticate);
@@ -23,7 +23,7 @@ router.get('/orders', authenticate, ctrlWrapper(getUserOrders));
 router.patch(
   '/orders/productId/status',
   authenticate,
-  requireAdmin,
+  // requireAdmin,
   celebrate(updateStatusSchema),
   ctrlWrapper(updateOrderStatus),
 );

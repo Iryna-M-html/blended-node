@@ -1,6 +1,9 @@
 import { Joi, Segments } from 'celebrate';
 import { ORDER_STATUS } from '../constants/orderStatuses.js';
-
+import { isValidObjectId } from 'mongoose';
+const objectIdValidator = (value, helpers) => {
+  return !isValidObjectId(value) ? helpers.message('Invalid id format') : value;
+};
 export const createOrderSchema = {
   [Segments.BODY]: Joi.object({
     products: Joi.array()
@@ -29,5 +32,8 @@ export const updateStatusSchema = {
     status: Joi.string()
       .valid(...ORDER_STATUS)
       .required(),
+
+    productId: Joi.string().custom(objectIdValidator).required(),
+    orderNum: Joi.string().required(),
   }),
 };

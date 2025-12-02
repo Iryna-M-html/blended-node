@@ -31,16 +31,24 @@ export const getUserOrders = async (req, res, next) => {
 };
 
 export const updateOrderStatus = async (req, res, next) => {
-  const { productId } = req.params;
-  const { status } = req.body;
+  const { productId, orderNum, status } = req.body;
+
   if (!ORDER_STATUS.includes(status)) {
     return next(createHttpError(400, 'Invalid order status'));
   }
-  const updated = await Order.findByIdAndUpdate(
-    productId,
+
+  const updated = await Order.findOneAndUpdate(
+    {
+      orderNum: orderNum,
+      'products.productId': productId,
+    },
     { status },
     { new: true },
   );
-  if (!updated) return next(createHttpError(404, 'Order not found'));
+
+  if (!updated) {
+    return next(createHttpError(404, 'Order not found'));
+  }
+
   res.json(updated);
 };
