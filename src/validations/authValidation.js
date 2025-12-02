@@ -9,6 +9,7 @@ export const registerUserSchema = {
       .pattern(/^\+380\d{9}$/)
       .max(13)
       .required(),
+    role: Joi.string().valid('user', 'admin').default('user'),
   }),
 };
 export const loginUserSchema = {
