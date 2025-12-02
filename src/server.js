@@ -18,16 +18,102 @@ import categoryRoutes from './routes/categoryRoutes.js';
 //   processTelegramUpdate,
 //   setupTelegramWebhook,
 // } from './services/telegram.js';
+import AdminJS from 'adminjs';
+import AdminJSExpress from '@adminjs/express';
+import { adminOptions } from './admin/admin.config.js';
+import MongoStore from 'connect-mongo';
+import { authenticate } from './admin/auth.js';
+import helmet from 'helmet';
 const app = express();
 const PORT = process.env.PORT ?? 3030;
+const isProd = process.env.NODE_ENV === 'production';
+// ============================================
+// ADMINJS SETUP
+// ============================================
+// let adminInstance = null;
 
+const createAdminJS = () => {
+  const admin = new AdminJS(adminOptions);
+
+  const sessionStore = MongoStore.create({
+    mongoUrl: process.env.MONGO_URL,
+    collectionName: 'admin_sessions',
+    ttl: 24 * 60 * 60,
+  });
+  const adminRouter = AdminJSExpress.buildAuthenticatedRouter(
+    admin,
+    {
+      authenticate,
+      cookieName: 'adminjs',
+      cookiePassword: process.env.ADMIN_COOKIE_SECRET,
+    },
+    null,
+    {
+      store: sessionStore,
+      resave: false,
+      saveUninitialized: false,
+      secret: process.env.ADMIN_SESSION_SECRET,
+      cookie: {
+        httpOnly: true,
+        secure: isProd,
+        maxAge: 1000 * 60 * 60 * 24,
+      },
+      name: 'adminjs',
+    },
+  );
+  app.use(admin.options.rootPath, adminRouter);
+
+  if (!isProd) {
+    admin.watch();
+  }
+  console.log('✅ AdminJS mounted at:', admin.options.rootPath);
+  // adminInstance = admin;
+};
+
+createAdminJS();
+// ===========================================
+app.set('trust proxy', isProd ? 1 : false);
 app.use(express.json());
-app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
+
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  }),
+);
+
+//где взять url клиентов
+const allowList = [
+  process.env.CLIENT_URL,
+  process.env.CLIENT_URL_2,
+  process.env.CLIENT_URL_LOCAL,
+].filter(Boolean);
+
+if (isProd) {
+  if (allowList.length === 0) {
+    app.use(cors({ origin: false }));
+  } else {
+    app.use(
+      cors({
+        origin: (origin, callback) => {
+          if (!origin) return callback(null, true);
+          if (allowList.includes(origin)) return callback(null, true);
+          return callback(new Error('Not allowed by CORS'));
+        },
+        credentials: true,
+      }),
+    );
+  }
+} else {
+  app.use(cors());
+}
+
 app.use(cookieParser());
 app.use(logger);
 
 app.get('/', (req, res) => {
-  res.send('✅ API is running!');
+  res.send('✅ Welcome to Products API');
 });
 app.use(authRoutes);
 app.use(productsRoutes);

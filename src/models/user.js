@@ -24,6 +24,13 @@ const userSchema = new Schema(
       trim: true,
       match: [/^\+380\d{9}$/, 'Phone must be in format +380XXXXXXXXX'],
     },
+    role: {
+      type: String,
+      required: [true, 'Role is required'],
+      trim: true,
+      default: 'user',
+      enum: ['user', 'admin'],
+    },
   },
   { timestamps: true, versionKey: false },
 );
