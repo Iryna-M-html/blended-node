@@ -1,5 +1,6 @@
 import { Product } from '../models/product.js';
 import createHttpError from 'http-errors';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 export const getAllProducts = async (req, res) => {
   const { page = 1, perPage = 5, search } = req.query;
@@ -41,8 +42,15 @@ export const getProductById = async (req, res) => {
 };
 
 export const createProduct = async (req, res) => {
+  let imageUrl = null;
+
+  if (req.file) {
+    const cloudinaryResult = await saveFileToCloudinary(req.file.buffer);
+    imageUrl = cloudinaryResult.secure_url;
+  }
   const product = await Product.create({
     ...req.body,
+    image: imageUrl,
     userId: req.user._id,
   });
   res.status(201).json(product);

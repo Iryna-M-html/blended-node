@@ -15,12 +15,18 @@ import {
 
 import { celebrate } from 'celebrate';
 import { authenticate } from '../middleware/authenticate.js';
+import { upload } from '../middleware/multer.js';
 
 const router = Router();
 router.use('/products', authenticate);
 router.get('/products', getAllProducts);
 router.get('/products/productId', celebrate(productIdSchema), getProductById);
-router.post('/products', celebrate(createProductSchema), createProduct);
+router.post(
+  '/products',
+  upload.single('image'),
+  celebrate(createProductSchema),
+  createProduct,
+);
 router.patch(
   '/products/productId',
   celebrate(updateProductSchema),
