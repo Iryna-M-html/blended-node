@@ -5,8 +5,8 @@ import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 export const getAllProducts = async (req, res) => {
   const { page = 1, perPage = 5, search } = req.query;
   const skip = (page - 1) * perPage;
-
-  const productsQuery = Product.find({ userId: req.user._id });
+  const productsQuery = Product.find();
+  // const productsQuery = Product.find({ userId: req.user._id });
 
   if (search) {
     productsQuery.where({ $text: { $search: search } });
@@ -32,7 +32,7 @@ export const getProductById = async (req, res) => {
   const { productId } = req.params;
   const product = await Product.findOne({
     _id: productId,
-    userId: req.user._id,
+    // userId: req.user._id,
   });
 
   if (!product) {

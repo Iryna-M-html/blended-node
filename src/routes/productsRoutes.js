@@ -16,14 +16,17 @@ import {
 import { celebrate } from 'celebrate';
 import { authenticate } from '../middleware/authenticate.js';
 import { upload } from '../middleware/multer.js';
+import { requireAdmin } from '../middleware/requireAdmin.js';
 
 const router = Router();
-router.use('/products', authenticate);
 router.get('/products', getAllProducts);
+router.use('/products', authenticate);
+
 router.get('/products/productId', celebrate(productIdSchema), getProductById);
 router.post(
   '/products',
   upload.single('image'),
+  requireAdmin,
   celebrate(createProductSchema),
   createProduct,
 );
