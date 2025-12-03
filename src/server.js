@@ -1,6 +1,8 @@
 import express from 'express';
 import 'dotenv/config';
 import cors from 'cors';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './swagger.config.js';
 
 import { connectMongoDB } from './db/connectMongoDB.js';
 import { errorHandler } from './middleware/errorHandler.js';
@@ -67,7 +69,7 @@ const createAdminJS = () => {
     admin.watch();
   }
   console.log('✅ AdminJS mounted at:', admin.options.rootPath);
-  // adminInstance = admin;
+  // adminInstance = admin; nt
 };
 
 createAdminJS();
@@ -115,6 +117,10 @@ app.use(logger);
 app.get('/', (req, res) => {
   res.send('✅ Welcome to Products API');
 });
+
+// Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 app.use(authRoutes);
 app.use(productsRoutes);
 app.use(orderRoutes);
