@@ -10,6 +10,10 @@ const productSchema = new Schema(
       enum: ['Books', 'Electronics', 'Clothing', 'Other'],
       default: 'Other',
     },
+    image: {
+      type: String,
+      trim: true,
+    },
     description: { type: String },
     userId: {
       type: Schema.Types.ObjectId,

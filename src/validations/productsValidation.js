@@ -12,6 +12,7 @@ export const createProductSchema = {
   [Segments.BODY]: Joi.object({
     name: Joi.string().min(1).required(),
     price: Joi.number().required(),
+    image: Joi.string().uri().trim(),
     category: Joi.string()
       .valid('Books', 'Electronics', 'Clothing', 'Other')
       .default('Other')
@@ -24,6 +25,7 @@ export const updateProductSchema = {
   [Segments.BODY]: Joi.object({
     name: Joi.string().min(1).required(),
     price: Joi.number().required(),
+    image: Joi.string().uri().trim(),
     category: Joi.string()
       .valid('Books', 'Electronics', 'Clothing', 'Other')
       .default('Other')
