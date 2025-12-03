@@ -73,13 +73,13 @@ router.use('/orders', authenticate);
  *                 properties:
  *                   street:
  *                     type: string
- *                     example: "ул. Ленина, 10"
+ *                     example: "ул. Франка, 10"
  *                   city:
  *                     type: string
- *                     example: "Москва"
+ *                     example: "Днепр"
  *                   country:
  *                     type: string
- *                     example: "Россия"
+ *                     example: "Украина"
  *                   zipCode:
  *                     type: string
  *                     example: "123456"
