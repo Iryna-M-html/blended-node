@@ -15,17 +15,14 @@ import orderRoutes from './routes/orderRoutes.js';
 import subscriptionRoutes from './routes/subscriptionRoutes.js';
 import feedbackRoutes from './routes/feedbackRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
-// import telegramRoutes from './routes/telegramRoutes.js';
-// import {
-//   processTelegramUpdate,
-//   setupTelegramWebhook,
-// } from './services/telegram.js';
+import telegramRoutes from './routes/telegramRoutes.js';
 import AdminJS from 'adminjs';
 import AdminJSExpress from '@adminjs/express';
 import { adminOptions } from './admin/admin.config.js';
 import MongoStore from 'connect-mongo';
 import { authenticate } from './admin/auth.js';
 import helmet from 'helmet';
+import { setupTelegramWebhook } from './services/telegram.js';
 const app = express();
 const PORT = process.env.PORT ?? 3030;
 const isProd = process.env.NODE_ENV === 'production';
@@ -127,22 +124,18 @@ app.use(orderRoutes);
 app.use(subscriptionRoutes);
 app.use(feedbackRoutes);
 app.use(categoryRoutes);
-// app.use(telegramRoutes);
+app.use(telegramRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
 await connectMongoDB();
+
+if (process.env.NODE_ENV === 'production') {
+  await setupTelegramWebhook();
+}
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-// const startServer = async () => {
-//   await connectMongoDB();
 
-//   if (process.env.NODE_ENV === 'production') {
-//     await setupTelegramWebhook();
-//   }
-//   app.listen(PORT, () => {
-//     console.log(`Server is running on port ${PORT}`);
-//   });
-// };
 // startServer();

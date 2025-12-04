@@ -31,6 +31,9 @@ const userSchema = new Schema(
       default: 'user',
       enum: ['user', 'admin'],
     },
+    telegramChatId: { type: String, required: false, default: null },
+    telegramUserId: { type: String, required: false, default: null },
+    telegramLinked: { type: Boolean, required: false, default: false },
   },
   { timestamps: true, versionKey: false },
 );
