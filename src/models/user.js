@@ -17,12 +17,29 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    lastname: {
+      type: String,
+      required: false,
+      trim: true,
+      default: '',
+    },
+    city: {
+      type: String,
+      required: false,
+      trim: true,
+      default: '',
+    },
     phone: {
       type: String,
       required: [true, 'Phone number is required'],
       unique: true,
       trim: true,
       match: [/^\+380\d{9}$/, 'Phone must be in format +380XXXXXXXXX'],
+    },
+    avatar_id: {
+      type: String,
+      required: false,
+      default: '',
     },
     role: {
       type: String,

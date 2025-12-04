@@ -45,7 +45,10 @@ export const createProduct = async (req, res) => {
   let imageUrl = null;
 
   if (req.file) {
-    const cloudinaryResult = await saveFileToCloudinary(req.file.buffer);
+    const cloudinaryResult = await saveFileToCloudinary(
+      req.file.buffer,
+      'product',
+    );
     imageUrl = cloudinaryResult.secure_url;
   }
   const product = await Product.create({
