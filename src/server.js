@@ -16,6 +16,7 @@ import subscriptionRoutes from './routes/subscriptionRoutes.js';
 import feedbackRoutes from './routes/feedbackRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import telegramRoutes from './routes/telegramRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 import AdminJS from 'adminjs';
 import AdminJSExpress from '@adminjs/express';
 import { adminOptions } from './admin/admin.config.js';
@@ -119,6 +120,7 @@ app.get('/', (req, res) => {
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(authRoutes);
+app.use(userRoutes);
 app.use(productsRoutes);
 app.use(orderRoutes);
 app.use(subscriptionRoutes);

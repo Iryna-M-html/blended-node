@@ -13,6 +13,8 @@ import {
   getCategoryById,
   updateCategory,
 } from '../controllers/categoryController.js';
+import { authenticate } from '../middleware/authenticate.js';
+import { requireAdmin } from '../middleware/requireAdmin.js';
 
 const router = Router();
 
@@ -203,6 +205,8 @@ router.get(
  */
 router.post(
   '/categories',
+  authenticate,
+  requireAdmin,
   celebrate(createCategorySchema),
   ctrlWrapper(createCategory),
 );

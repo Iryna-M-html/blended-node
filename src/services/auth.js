@@ -1,6 +1,9 @@
 import crypto from 'crypto';
 import { FIFTEEN_MINUTES, THIRTY_DAYS } from '../constants/time.js';
 import { Session } from '../models/session.js';
+
+const isProd = process.env.NODE_ENV === 'production';
+
 export const createSession = async (userId) => {
   const accessToken = crypto.randomBytes(30).toString('base64');
   const refreshToken = crypto.randomBytes(30).toString('base64');
@@ -33,4 +36,14 @@ export const setSessionCookies = (res, session) => {
     sameSite: 'none',
     maxAge: THIRTY_DAYS,
   });
+};
+export const clearSessionCookies = (res) => {
+  const cookieOptions = { httpOnly: true, path: '/' };
+  if (isProd) {
+    cookieOptions.secure = true;
+    cookieOptions.sameSite = 'none';
+  }
+  res.clearCookie('sessionId', cookieOptions);
+  res.clearCookie('accessToken', cookieOptions);
+  res.clearCookie('refreshToken', cookieOptions);
 };
