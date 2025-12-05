@@ -5,11 +5,16 @@ import {
   loginUser,
   logoutUser,
   refreshUserSession,
+  requestResetPassword,
+  resetPassword,
 } from '../controllers/authController.js';
 import {
   registerUserSchema,
   loginUserSchema,
+  requestResetEmailSchema,
+  resetPasswordSchema,
 } from '../validations/authValidation.js';
+import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 
 const router = Router();
 
@@ -194,5 +199,51 @@ router.post('/auth/logout', logoutUser);
  *         description: Сессия недействительна или истекла
  */
 router.post('/auth/refresh', refreshUserSession);
+
+/**
+ * @swagger
+ * /api/auth/request-password-reset:
+ *   post:
+ *     summary: Request password reset code (Sent via Telegram if linked)
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/RequestPasswordReset'
+ *     responses:
+ *       200:
+ *         description: 200 always returned for security (response message does not leak whether account exists).
+ */
+router.post(
+  '/auth/request-reset-email',
+  celebrate(requestResetEmailSchema),
+  ctrlWrapper(requestResetPassword),
+);
+
+/**
+ * @swagger
+ * /api/auth/reset-password:
+ *   post:
+ *     summary: Reset password using code delivered by Telegram
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ResetPasswordRequest'
+ *     responses:
+ *       200:
+ *         description: Password reset successful.
+ *       401:
+ *         description: Invalid phone/code or code expired.
+ */
+router.post(
+  '/auth/reset-password',
+  celebrate(resetPasswordSchema),
+  ctrlWrapper(resetPassword),
+);
 
 export default router;
